@@ -6,13 +6,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/go-kit/kit/log"
 	"github.com/go-redis/redis"
-	"github.com/wifeng/short-url/pkg/dao"
-)
-
-const (
-	shortDomain = "http://sh.url/"
+	"github.com/WiFeng/short-url/pkg/core/config"
+	"github.com/WiFeng/short-url/pkg/core/log"
+	"github.com/WiFeng/short-url/pkg/dao"
 )
 
 var (
@@ -37,19 +34,20 @@ type Service interface {
 }
 
 // New returns a basic Service with all of the expected middlewares wired in.
-func New(db *sql.DB, re *redis.Client, logger log.Logger) Service {
+func New(conf *config.Config, db *sql.DB, re *redis.Client, logger log.Logger) Service {
 	var svc Service
 	{
-		svc = NewBasicService(db, re, logger)
+		svc = NewBasicService(conf, db, re, logger)
 		svc = LoggingMiddleware(logger)(svc)
 	}
 	return svc
 }
 
 // NewBasicService returns a native, stateless implementation of Service.
-func NewBasicService(db *sql.DB, re *redis.Client, logger log.Logger) Service {
+func NewBasicService(conf *config.Config, db *sql.DB, re *redis.Client, logger log.Logger) Service {
 
 	return &basicService{
+		config: conf,
 		dao:    dao.New(db, re),
 		logger: logger,
 	}
@@ -57,6 +55,7 @@ func NewBasicService(db *sql.DB, re *redis.Client, logger log.Logger) Service {
 
 type basicService struct {
 	dao    *dao.Dao
+	config *config.Config
 	logger log.Logger
 }
 
@@ -75,6 +74,8 @@ func (s *basicService) convertToBase62Str(id int64) string {
 }
 
 func (s *basicService) Create(_ context.Context, longURL string) (string, error) {
+	// shortDomain is configurable
+	shortDomain := s.config.General.ShortDomain
 
 	shortIDKey := fmt.Sprintf("%x", md5.Sum([]byte(longURL)))
 	if shortURL, err := s.dao.GetShortURL(shortIDKey); err != nil {

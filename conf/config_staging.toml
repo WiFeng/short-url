@@ -1,0 +1,9 @@
+# The config of staging enviorment
+
+[[server]]
+
+
+
+[[redis]]
+
+[[mysql]]

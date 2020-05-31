@@ -14,28 +14,42 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/oklog/oklog/pkg/group"
 
-	"github.com/go-kit/kit/log"
-
-	"github.com/wifeng/short-url/pkg/endpoint"
-	"github.com/wifeng/short-url/pkg/service"
-	"github.com/wifeng/short-url/pkg/transport"
+	"github.com/WiFeng/short-url/pkg/core/config"
+	"github.com/WiFeng/short-url/pkg/core/log"
+	"github.com/WiFeng/short-url/pkg/endpoint"
+	"github.com/WiFeng/short-url/pkg/service"
+	"github.com/WiFeng/short-url/pkg/transport"
 )
 
 func main() {
 	// Define our flags.
 	fs := flag.NewFlagSet("short-url", flag.ExitOnError)
 	var (
-		httpAddr = fs.String("http-addr", ":8081", "HTTP listen address")
+		httpAddr    = fs.String("http-addr", ":8081", "HTTP listen address")
+		environment = fs.String("env", "development", "Runing environment")
 	)
 	fs.Usage = usageFor(fs, os.Args[0]+" [flags]")
 	fs.Parse(os.Args[1:])
 
+	var conf = &config.Config{}
+	{
+		confFile := fmt.Sprintf("./conf/config_%s.toml", *environment)
+		if _, err := config.DecodeFile(confFile, &conf); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
+
 	// Create a single logger, which we'll use and give to other components.
+	var err error
 	var logger log.Logger
 	{
-		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-		logger = log.With(logger, "caller", log.DefaultCaller)
+		logger, err = log.NewLogger(conf)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		defer logger.Sync()
 	}
 
 	// Create a db client
@@ -47,14 +61,17 @@ func main() {
 	// Create a redis client
 	var redisCli *redis.Client
 	{
+		addr := fmt.Sprintf("%s:%d", conf.Redis.Host, conf.Redis.Port)
+		pass := conf.Redis.Auth
+		db := conf.Redis.Db
 		redisCli = redis.NewClient(&redis.Options{
-			Addr:     "localhost:6379", // use default Addr
-			Password: "",               // no password set
-			DB:       0,                // use default DB
+			Addr:     addr, // use default Addr
+			Password: pass, // no password set
+			DB:       db,   // use default DB
 		})
 
 		if _, err := redisCli.Ping().Result(); err != nil {
-			logger.Log("client", "redis", "err", err)
+			logger.Fatal("client", "redis", "err", err)
 			os.Exit(1)
 		}
 	}
@@ -66,7 +83,7 @@ func main() {
 	// the interfaces that the transports expect. Note that we're not binding
 	// them to ports or anything yet; we'll do that next.
 	var (
-		service     = service.New(db, redisCli, logger)
+		service     = service.New(conf, db, redisCli, logger)
 		endpoints   = endpoint.New(service, logger)
 		httpHandler = transport.NewHTTPHandler(endpoints, logger)
 	)
@@ -76,11 +93,11 @@ func main() {
 		// The HTTP listener mounts the Go kit HTTP handler we created.
 		httpListener, err := net.Listen("tcp", *httpAddr)
 		if err != nil {
-			logger.Log("transport", "HTTP", "during", "Listen", "err", err)
+			logger.Fatalw("listen error", "transport", "HTTP", "during", "Listen", "err", err)
 			os.Exit(1)
 		}
 		g.Add(func() error {
-			logger.Log("transport", "HTTP", "addr", *httpAddr)
+			logger.Infow("serve start", "transport", "HTTP", "addr", *httpAddr)
 			return http.Serve(httpListener, httpHandler)
 		}, func(error) {
 			httpListener.Close()
@@ -103,7 +120,7 @@ func main() {
 			close(cancelInterrupt)
 		})
 	}
-	logger.Log("exit", g.Run())
+	logger.Info("serve exit. ", g.Run())
 }
 
 func usageFor(fs *flag.FlagSet, short string) func() {

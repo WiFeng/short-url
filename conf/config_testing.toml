@@ -1,0 +1,9 @@
+# The config of testing enviorment
+
+[[server]]
+
+
+
+[[redis]]
+
+[[mysql]]

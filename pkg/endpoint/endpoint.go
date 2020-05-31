@@ -4,9 +4,9 @@ import (
 	"context"
 
 	kitendpoint "github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log"
 
-	"github.com/wifeng/short-url/pkg/service"
+	"github.com/WiFeng/short-url/pkg/core/log"
+	"github.com/WiFeng/short-url/pkg/service"
 )
 
 // Endpoints collects all of the endpoints that compose a profile service. It's
@@ -24,19 +24,22 @@ func New(s service.Service, logger log.Logger) Endpoints {
 	var createEndpoint kitendpoint.Endpoint
 	{
 		createEndpoint = MakeCreateEndpoint(s)
-		createEndpoint = LoggingMiddleware(log.With(logger, "method", "Create"))(createEndpoint)
+		// createEndpoint = LoggingMiddleware(log.With(logger, "method", "Create"))(createEndpoint)
+		createEndpoint = LoggingMiddleware(logger)(createEndpoint)
 	}
 
 	var queryEndpoint kitendpoint.Endpoint
 	{
 		queryEndpoint = MakeQueyrEndpoint(s)
-		queryEndpoint = LoggingMiddleware(log.With(logger, "method", "Query"))(queryEndpoint)
+		// queryEndpoint = LoggingMiddleware(log.With(logger, "method", "Query"))(queryEndpoint)
+		queryEndpoint = LoggingMiddleware(logger)(queryEndpoint)
 	}
 
 	var queryAdvEndpoint kitendpoint.Endpoint
 	{
 		queryAdvEndpoint = MakeQueyrAdvEndpoint(s)
-		queryAdvEndpoint = LoggingMiddleware(log.With(logger, "method", "QueryAdv"))(queryAdvEndpoint)
+		// queryAdvEndpoint = LoggingMiddleware(log.With(logger, "method", "QueryAdv"))(queryAdvEndpoint)
+		queryAdvEndpoint = LoggingMiddleware(logger)(queryAdvEndpoint)
 	}
 
 	return Endpoints{

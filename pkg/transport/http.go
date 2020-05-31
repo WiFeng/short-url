@@ -8,19 +8,22 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/go-kit/kit/log"
 	"github.com/gorilla/mux"
 
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
 
-	"github.com/wifeng/short-url/pkg/endpoint"
+	"github.com/WiFeng/short-url/pkg/core/log"
+	"github.com/WiFeng/short-url/pkg/endpoint"
 )
 
 var (
 	// ErrBadRouting is returned when an expected path variable is missing.
 	// It always indicates programmer error.
 	ErrBadRouting = errors.New("inconsistent mapping between route and handler (programmer error)")
+
+	// ErrReponseAssert is the errof of type asserting
+	ErrReponseAssert = errors.New("response assert error")
 )
 
 // NewHTTPHandler returns an HTTP handler that makes a set of endpoints
@@ -137,8 +140,7 @@ func encodeHTTPQueryAdvResponse(ctx context.Context, w http.ResponseWriter, resp
 	}
 	resp, ok := response.(endpoint.QueryResponse)
 	if !ok {
-		err := errors.New("response assert error")
-		errorEncoder(ctx, err, w)
+		errorEncoder(ctx, ErrReponseAssert, w)
 		return nil
 	}
 

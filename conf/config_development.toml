@@ -1,0 +1,30 @@
+# The config of development enviorment
+
+[server]
+name = "short-url"
+
+[server.http]
+addr = ":8081"
+
+[server.log]
+level = "debug"
+development = true
+disable_caller = false
+disable_stacktrace = false
+encoding = "json"
+output_paths = ["stdout", "./logs/short-url.log"]
+error_output_paths = ["stderr"]
+initial_fields = {}
+
+[redis]
+host = "127.0.0.1"
+port = 6379
+auth = ""
+db = 0
+
+[mysql]
+host = "127.0.0.1"
+port = 3306
+
+[general]
+short_domain = "http://sh.url/"

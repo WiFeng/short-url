@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/go-kit/kit/log"
+	"github.com/WiFeng/short-url/pkg/core/log"
 )
 
 // Middleware describes a service (as opposed to endpoint) middleware.
@@ -24,14 +24,14 @@ type loggingMiddleware struct {
 
 func (mw loggingMiddleware) Create(ctx context.Context, longURL string) (shortURL string, err error) {
 	defer func() {
-		mw.logger.Log("method", "Create", "longURL", longURL, "shortURL", shortURL, "err", err)
+		mw.logger.Infow("defer caller", "method", "Create", "longURL", longURL, "shortURL", shortURL, "err", err)
 	}()
 	return mw.next.Create(ctx, longURL)
 }
 
 func (mw loggingMiddleware) Query(ctx context.Context, shortURL string) (longURL string, err error) {
 	defer func() {
-		mw.logger.Log("method", "Query", "shortURL", shortURL, "longURL", longURL, "err", err)
+		mw.logger.Infow("defer caller", "method", "Query", "shortURL", shortURL, "longURL", longURL, "err", err)
 	}()
 	return mw.next.Query(ctx, shortURL)
 }

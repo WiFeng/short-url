@@ -1,0 +1,54 @@
+{"level":"fatal","ts":1590923135.892542,"caller":"cmd/server.go:101","msg":"transportHTTPaddr:8081","stacktrace":"main.main.func1\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:101\ngithub.com/oklog/run.(*Group).Run.func1\n\t/Users/leeco/go/src/github.com/oklog/run/group.go:38"}
+{"level":"fatal","ts":1590923288.9284601,"caller":"cmd/server.go:101","msg":"transportHTTPaddr:8081","stacktrace":"main.main.func1\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:101\ngithub.com/oklog/run.(*Group).Run.func1\n\t/Users/leeco/go/src/github.com/oklog/run/group.go:38"}
+{"level":"info","ts":1590923502.1248598,"caller":"cmd/server.go:100","msg":"transportHTTPaddr:8081"}
+{"level":"fatal","ts":1590923574.102515,"caller":"cmd/server.go:123","msg":"exitreceived signal interrupt","stacktrace":"main.main\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:123\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:203"}
+{"level":"dpanic","ts":1590923577.112405,"caller":"zap/sugar.go:179","msg":"Ignored key without a value.","ignored":":8081","stacktrace":"main.main.func1\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:100\ngithub.com/oklog/run.(*Group).Run.func1\n\t/Users/leeco/go/src/github.com/oklog/run/group.go:38"}
+{"level":"info","ts":1590923662.582987,"caller":"cmd/server.go:100","msg":"http.Serve start","transport":"HTTP","addr":":8081"}
+{"level":"fatal","ts":1590923859.767033,"caller":"cmd/server.go:123","msg":"exitreceived signal interrupt","stacktrace":"main.main\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:123\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:203"}
+{"level":"info","ts":1590923873.7123232,"caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"info","ts":1590923875.287573,"caller":"cmd/server.go:123","msg":"exit. received signal interrupt"}
+{"L":"INFO","T":"2020-05-31T19:27:23.702+0800","C":"cmd/server.go:100","M":"serve start","transport":"HTTP","addr":":8081"}
+{"L":"INFO","T":"2020-05-31T19:30:33.267+0800","C":"cmd/server.go:123","M":"serve exit. received signal interrupt"}
+{"level":"info","ts":"2020-05-31T19:30:36.117+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"info","ts":"2020-05-31T19:33:45.321+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:33:47.001+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:34:24.920+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:34:28.115+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:35:13.229+0800","caller":"service/middleware.go:34","msg":"methodQueryshortURL2bRlongURLhttps://github.com/wifeng/leetcode1err<nil>"}
+{"level":"INFO","time":"2020-05-31T19:35:13.229+0800","caller":"endpoint/middleware.go:19","msg":"transport_error<nil>took1.451702ms"}
+{"level":"INFO","time":"2020-05-31T19:39:16.592+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:39:18.406+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:39:22.402+0800","caller":"service/middleware.go:34","msg":"methodQueryshortURL2bRlongURLhttps://github.com/wifeng/leetcode1err<nil>"}
+{"level":"INFO","time":"2020-05-31T19:39:22.402+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"tookError":"json: unsupported type: func() int64"}
+{"level":"INFO","time":"2020-05-31T19:42:48.706+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:42:51.391+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:42:56.847+0800","caller":"service/middleware.go:34","msg":"defer callermethodQueryshortURL2bRlongURLhttps://github.com/wifeng/leetcode1err<nil>"}
+{"level":"INFO","time":"2020-05-31T19:42:56.847+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":111}
+{"level":"INFO","time":"2020-05-31T19:46:27.024+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:46:54.201+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:46:58.138+0800","caller":"service/middleware.go:34","msg":"defer callermethodQueryshortURL2bRlongURLhttps://github.com/wifeng/leetcode1err<nil>"}
+{"level":"INFO","time":"2020-05-31T19:46:58.138+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":243}
+{"level":"INFO","time":"2020-05-31T19:47:15.933+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:48:59.177+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:49:02.372+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"FATAL","time":"2020-05-31T19:49:23.249+0800","caller":"cmd/server.go:74","msg":"clientrediserrdial tcp 127.0.0.1:5379: connect: connection refused","stacktrace":"main.main\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:74\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:203"}
+{"level":"FATAL","time":"2020-05-31T19:50:32.926+0800","caller":"cmd/server.go:74","msg":"clientrediserrdial tcp 127.0.0.1:5379: connect: connection refused","stacktrace":"main.main\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:74\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:203"}
+{"level":"FATAL","time":"2020-05-31T19:53:17.341+0800","caller":"cmd/server.go:74","msg":"clientrediserrdial tcp 127.0.0.1:5379: connect: connection refused","stacktrace":"main.main\n\t/Users/leeco/go/src/github.com/WiFeng/short-url/cmd/server.go:74\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:203"}
+{"level":"INFO","time":"2020-05-31T19:53:44.052+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:53:49.364+0800","caller":"service/middleware.go:34","msg":"defer callermethodQueryshortURL2bRlongURLhttps://github.com/wifeng/leetcode1err<nil>"}
+{"level":"INFO","time":"2020-05-31T19:53:49.364+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":288}
+{"level":"INFO","time":"2020-05-31T19:54:21.943+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T19:54:23.488+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T19:54:44.901+0800","caller":"service/middleware.go:34","msg":"defer caller","method":"Query","shortURL":"2bR","longURL":"https://github.com/wifeng/leetcode1","err":null}
+{"level":"INFO","time":"2020-05-31T19:54:44.901+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":269}
+{"level":"INFO","time":"2020-05-31T20:10:30.759+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T20:16:56.658+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T20:17:03.233+0800","caller":"service/middleware.go:34","msg":"defer caller","method":"Query","shortURL":"2bR","longURL":"https://github.com/wifeng/leetcode1","err":null}
+{"level":"INFO","time":"2020-05-31T20:17:03.233+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":269}
+{"level":"INFO","time":"2020-05-31T20:17:18.189+0800","caller":"service/middleware.go:27","msg":"defer caller","method":"Create","longURL":"https://github.com/wifeng/leetcode1","shortURL":"2bR","err":null}
+{"level":"INFO","time":"2020-05-31T20:17:18.189+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":410}
+{"level":"INFO","time":"2020-05-31T20:18:55.435+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}
+{"level":"INFO","time":"2020-05-31T20:18:57.846+0800","caller":"cmd/server.go:100","msg":"serve start","transport":"HTTP","addr":":8081"}
+{"level":"INFO","time":"2020-05-31T20:19:01.779+0800","caller":"service/middleware.go:27","msg":"defer caller","method":"Create","longURL":"https://github.com/wifeng/leetcode1","shortURL":"http://sh.url/2bR","err":null}
+{"level":"INFO","time":"2020-05-31T20:19:01.779+0800","caller":"endpoint/middleware.go:19","msg":"defer caller","transport_error":null,"took":344}
+{"level":"INFO","time":"2020-05-31T20:20:58.162+0800","caller":"cmd/server.go:123","msg":"serve exit. received signal interrupt"}

@@ -5,7 +5,8 @@ import (
 	"time"
 
 	kitendpoint "github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log"
+
+	"github.com/WiFeng/short-url/pkg/core/log"
 )
 
 // LoggingMiddleware returns an endpoint middleware that logs the
@@ -15,7 +16,7 @@ func LoggingMiddleware(logger log.Logger) kitendpoint.Middleware {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 
 			defer func(begin time.Time) {
-				logger.Log("transport_error", err, "took", time.Since(begin))
+				logger.Infow("defer caller", "transport_error", err, "took", time.Since(begin).Microseconds())
 			}(time.Now())
 			return next(ctx, request)
 
