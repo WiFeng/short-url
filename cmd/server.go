@@ -71,7 +71,7 @@ func main() {
 		})
 
 		if _, err := redisCli.Ping().Result(); err != nil {
-			logger.Fatal("client", "redis", "err", err)
+			logger.Fatalw("redis ping error", "err", err)
 			os.Exit(1)
 		}
 	}
