@@ -7,7 +7,7 @@ name = "short-url"
 addr = ":8081"
 
 [server.log]
-level = "debug"
+level = "info"
 development = false
 disable_caller = false
 disable_stacktrace = false

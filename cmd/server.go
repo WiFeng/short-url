@@ -25,17 +25,21 @@ func main() {
 	// Define our flags.
 	fs := flag.NewFlagSet("short-url", flag.ExitOnError)
 	var (
-		httpAddr    = fs.String("http-addr", ":8081", "HTTP listen address")
+		// httpAddr    = fs.String("http-addr", ":8081", "HTTP listen address")
 		environment = fs.String("env", "development", "Runing environment")
 	)
 	fs.Usage = usageFor(fs, os.Args[0]+" [flags]")
 	fs.Parse(os.Args[1:])
 
 	var conf = &config.Config{}
+	var confFile string
 	{
-		confFile := fmt.Sprintf("./conf/config_%s.toml", *environment)
+		confFile = "./conf/config.toml"
+		if *environment != "" {
+			confFile = fmt.Sprintf("./conf/config_%s.toml", *environment)
+		}
 		if _, err := config.DecodeFile(confFile, &conf); err != nil {
-			fmt.Println(err)
+			fmt.Println("config.DecodeFile error.", err)
 			os.Exit(1)
 		}
 	}
@@ -90,6 +94,9 @@ func main() {
 
 	var g group.Group
 	{
+		// httpAddr is configurable
+		httpAddr := &conf.Server.HTTP.Addr
+
 		// The HTTP listener mounts the Go kit HTTP handler we created.
 		httpListener, err := net.Listen("tcp", *httpAddr)
 		if err != nil {
@@ -97,7 +104,7 @@ func main() {
 			os.Exit(1)
 		}
 		g.Add(func() error {
-			logger.Infow("serve start", "transport", "HTTP", "addr", *httpAddr)
+			logger.Infow("serve start", "transport", "HTTP", "addr", *httpAddr, "config", confFile)
 			return http.Serve(httpListener, httpHandler)
 		}, func(error) {
 			httpListener.Close()
