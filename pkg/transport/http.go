@@ -5,10 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/ext"
+	jaegerclient "github.com/uber/jaeger-client-go"
 
 	kitendpoint "github.com/go-kit/kit/endpoint"
 	kithttp "github.com/go-kit/kit/transport/http"
@@ -33,6 +37,8 @@ func NewHTTPHandler(endpoints endpoint.Endpoints, logger log.Logger) http.Handle
 	options := []kithttp.ServerOption{
 		kithttp.ServerErrorEncoder(errorEncoder),
 		kithttp.ServerErrorLogger(logger),
+		kithttp.ServerBefore(beforeHandler),
+		kithttp.ServerAfter(afterHandler),
 	}
 
 	r.Methods("POST").Path("/admin/create").Handler(kithttp.NewServer(
@@ -82,6 +88,78 @@ func errorDecoder(r *http.Response) error {
 
 type errorWrapper struct {
 	Error string `json:"error"`
+}
+
+func startSpan(ctx context.Context, r *http.Request) context.Context {
+	var serverSpan opentracing.Span
+	var appSpecificOperationName = fmt.Sprintf("[%s]%s", r.Method, r.URL)
+
+	wireContext, err := opentracing.GlobalTracer().Extract(
+		opentracing.HTTPHeaders,
+		opentracing.HTTPHeadersCarrier(r.Header))
+	if err != nil {
+		// Optionally record something about err here
+	}
+
+	// Create the span referring to the RPC client if available.
+	// If wireContext == nil, a root span will be created.
+	serverSpan = opentracing.StartSpan(
+		appSpecificOperationName,
+		ext.RPCServerOption(wireContext))
+
+	// defer serverSpan.Finish()
+
+	// ctx = opentracing.ContextWithSpan(context.Background(), serverSpan)
+	newCtx := opentracing.ContextWithSpan(ctx, serverSpan)
+
+	return newCtx
+}
+
+func finishSpan(ctx context.Context, w http.ResponseWriter) context.Context {
+	span := opentracing.SpanFromContext(ctx)
+	if span != nil {
+		span.Finish()
+	}
+	return ctx
+}
+
+func getTraceID(ctx context.Context) string {
+	var traceID string
+	span := opentracing.SpanFromContext(ctx)
+	if span != nil {
+		spanContext := span.Context()
+		jeagerSpanContext, ok := spanContext.(jaegerclient.SpanContext)
+		if ok {
+			traceID = jeagerSpanContext.TraceID().String()
+		}
+	}
+
+	return traceID
+}
+
+func buildLogger(ctx context.Context) context.Context {
+	newLogg := log.GetDefaultLogger()
+
+	traceID := getTraceID(ctx)
+	if traceID != "" {
+		newLogg = newLogg.With2("traceid", traceID)
+	} else {
+		newLogg = newLogg.With2("traceid", traceID)
+	}
+
+	newCtx := log.ContextWithLogger(ctx, newLogg)
+	return newCtx
+}
+
+func beforeHandler(ctx context.Context, r *http.Request) context.Context {
+	ctx = startSpan(ctx, r)
+	ctx = buildLogger(ctx)
+	return ctx
+}
+
+func afterHandler(ctx context.Context, w http.ResponseWriter) context.Context {
+	ctx = finishSpan(ctx, w)
+	return ctx
 }
 
 // decodeHTTPSumRequest is a transport/http.DecodeRequestFunc that decodes a

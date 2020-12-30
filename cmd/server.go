@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -13,6 +14,9 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/oklog/oklog/pkg/group"
+	"github.com/opentracing/opentracing-go"
+	jaegerconfig "github.com/uber/jaeger-client-go/config"
+	"github.com/uber/jaeger-lib/metrics/prometheus"
 
 	"github.com/WiFeng/short-url/pkg/core/config"
 	"github.com/WiFeng/short-url/pkg/core/log"
@@ -53,7 +57,28 @@ func main() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		log.SetDefaultLogger(logger)
 		defer logger.Sync()
+	}
+
+	var tracer opentracing.Tracer
+	var tracerCloser io.Closer
+	{
+		serviceName := conf.Server.Name
+		metricsFactory := prometheus.New()
+		tracer, tracerCloser, err = jaegerconfig.Configuration{
+			ServiceName: serviceName,
+		}.NewTracer(
+			jaegerconfig.Metrics(metricsFactory),
+		)
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		defer tracerCloser.Close()
+		opentracing.InitGlobalTracer(tracer)
 	}
 
 	// Create a db client

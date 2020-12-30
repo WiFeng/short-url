@@ -31,7 +31,8 @@ func (mw loggingMiddleware) Create(ctx context.Context, longURL string) (shortUR
 
 func (mw loggingMiddleware) Query(ctx context.Context, shortURL string) (longURL string, err error) {
 	defer func() {
-		mw.logger.Infow("defer caller", "method", "Query", "shortURL", shortURL, "longURL", longURL, "err", err)
+		// mw.logger.Infow("defer caller", "method", "Query", "shortURL", shortURL, "longURL", longURL, "err", err)
+		log.Infow(ctx, "defer caller", "method", "Query", "shortURL", shortURL, "longURL", longURL, "err", err)
 	}()
 	return mw.next.Query(ctx, shortURL)
 }
