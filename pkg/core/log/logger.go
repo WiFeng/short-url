@@ -7,6 +7,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	// TraceIDKey ...
+	TraceIDKey = "trace_id"
+)
+
 // Logger interface
 type Logger interface {
 	DPanic(args ...interface{})

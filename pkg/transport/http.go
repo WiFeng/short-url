@@ -142,13 +142,19 @@ func buildLogger(ctx context.Context) context.Context {
 
 	traceID := getTraceID(ctx)
 	if traceID != "" {
-		newLogg = newLogg.With2("traceid", traceID)
+		newLogg = newLogg.With2(log.TraceIDKey, traceID)
 	} else {
-		newLogg = newLogg.With2("traceid", traceID)
+		newLogg = newLogg.With2(log.TraceIDKey, traceID)
 	}
 
 	newCtx := log.ContextWithLogger(ctx, newLogg)
 	return newCtx
+}
+
+func syncLogger(ctx context.Context) context.Context {
+	logg := log.LoggerFromContext(ctx)
+	logg.Sync()
+	return ctx
 }
 
 func beforeHandler(ctx context.Context, r *http.Request) context.Context {
@@ -159,6 +165,7 @@ func beforeHandler(ctx context.Context, r *http.Request) context.Context {
 
 func afterHandler(ctx context.Context, w http.ResponseWriter) context.Context {
 	ctx = finishSpan(ctx, w)
+	ctx = syncLogger(ctx)
 	return ctx
 }
 
