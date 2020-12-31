@@ -91,3 +91,11 @@ func Infow(ctx context.Context, msg string, keysAndValues ...interface{}) {
 	logg := LoggerFromContext(ctx)
 	logg.Infow(msg, keysAndValues...)
 }
+
+// With function
+func With(ctx context.Context, args ...interface{}) Logger {
+	logg := LoggerFromContext(ctx)
+	newlogg := logg.With2(args...)
+
+	return newlogg
+}
