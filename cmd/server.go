@@ -23,6 +23,8 @@ import (
 	"github.com/WiFeng/short-url/pkg/endpoint"
 	"github.com/WiFeng/short-url/pkg/service"
 	"github.com/WiFeng/short-url/pkg/transport"
+
+	_ "net/http/pprof"
 )
 
 func main() {

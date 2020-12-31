@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/http/pprof"
 
 	"github.com/gorilla/mux"
 	"github.com/opentracing/opentracing-go"
@@ -40,6 +41,12 @@ func NewHTTPHandler(endpoints endpoint.Endpoints, logger log.Logger) http.Handle
 		kithttp.ServerBefore(beforeHandler),
 		kithttp.ServerAfter(afterHandler),
 	}
+
+	r.HandleFunc("/debug/pprof/", pprof.Index)
+	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
 	r.Methods("POST").Path("/admin/create").Handler(kithttp.NewServer(
 		endpoints.CreateEndpoint,
@@ -152,8 +159,8 @@ func buildLogger(ctx context.Context) context.Context {
 }
 
 func syncLogger(ctx context.Context) context.Context {
-	logg := log.LoggerFromContext(ctx)
-	logg.Sync()
+	// logg := log.LoggerFromContext(ctx)
+	// logg.Sync()
 	return ctx
 }
 
